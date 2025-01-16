@@ -1,11 +1,10 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
-  <RouterLink to="/">Home</RouterLink>
-  <RouterView />
+  <MainContent/>
 </template>
+
+<script setup lang="ts">
+import MainContent from './views/MainContent.vue';
+</script>
 
 <style scoped>
 
