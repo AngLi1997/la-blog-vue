@@ -1,31 +1,58 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import laAxios from '@/components/LaAxios';
+import { onMounted, provide, ref } from 'vue';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+const top10 = ref([])
+const tags = ref([])
+const categories = ref([])
+onMounted(() => {
+    flushData();
+})
+const router = useRouter()
+const route = useRoute()
+const flushData = () => {
+    laAxios.get('/api/article/list_top_10').then(res => {
+        top10.value = res.data.data;
+    })
+    laAxios.get('/api/tag/list_all').then(res => {
+        tags.value = res.data.data;
+    })
+    laAxios.get('/api/category/list_all').then(res => {
+        categories.value = res.data.data;
+    })
+}
+provide('flushData', flushData)
 </script>
 <template>
     <div class="container">
         <div class="left">
             <div class="logo">
-                LOGO
+                LIANG
             </div>
             <div class="search">
 
             </div>
             <ul class="menu">
                 <li>搜索</li>
-                <li>关于我</li>
+                <input type="text" placeholder="搜索" />
+                <li @click="() => router.push({path: '/about'})">关于我</li>
                 <li>最新</li>
-                <ul class="article-list">
-                    <li>develop1</li>
-                    <li>develop2</li>
-                    <li>develop3</li>
+                <ul class="top_10">
+                    <li v-for="item in top10" @click="() => {
+                        router.push({
+                            path: '/article',
+                            query: {
+                                id: item['ID']
+                            }
+                        })
+                    }">
+                        {{ "[" + item['title'] + "]" }}
+                    </li>
                 </ul>
             </ul>
-            <!-- <RouterLink to="/">主页</RouterLink> -->
-            <!-- <RouterLink to="/article">文章</RouterLink> -->
-            <!-- <RouterLink to="/about">关于</RouterLink> -->
         </div>
         <div class="middle">
-            <RouterView />
+            <RouterView :key="route.fullPath" />
         </div>
         <div class="right">
             <div class="categories">
@@ -33,11 +60,9 @@ import { RouterLink, RouterView } from 'vue-router'
                     分类
                 </div>
                 <ul>
-                    <li>后端开发</li>
-                    <li>前端开发</li>
-                    <li>数据库</li>
-                    <li>操作系统</li>
-                    <li>操作系统</li>
+                    <li v-for="item in categories">
+                        {{ item['name'] }}
+                    </li>
                 </ul>
             </div>
             <div class="categories">
@@ -45,12 +70,9 @@ import { RouterLink, RouterView } from 'vue-router'
                     标签
                 </div>
                 <ul>
-                    <li>Java</li>
-                    <li>go</li>
-                    <li>MySQL</li>
-                    <li>Springboot</li>
-                    <li>Windows</li>
-                    <li>MacOS</li>
+                    <li v-for="item in tags">
+                        {{ item['name'] }}
+                    </li>
                 </ul>
             </div>
         </div>
@@ -95,7 +117,9 @@ import { RouterLink, RouterView } from 'vue-router'
     -ms-overflow-style: none;
 }
 
-.middle::-webkit-scrollbar, .left::-webkit-scrollbar, .right::-webkit-scrollbar {
+.middle::-webkit-scrollbar,
+.left::-webkit-scrollbar,
+.right::-webkit-scrollbar {
     display: none;
 }
 
@@ -128,15 +152,18 @@ import { RouterLink, RouterView } from 'vue-router'
     font-weight: bolder;
     padding-bottom: 0.5rem;
 }
+
 .categories ul {
     list-style: none;
     padding: 0;
     color: #0055bb;
 }
+
 .categories ul li {
     padding: 0.25rem 0;
 }
-.article-list {
+
+.top_10 {
     list-style: none;
 }
 </style>
