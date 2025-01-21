@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import MarkdownEditor from '@/components/MarkdownEditor.vue'
 import ArticleDetail from '@/views/ArticleDetail.vue'
+import ArticleSearch from '@/views/ArticleSearch.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,10 @@ const router = createRouter({
       path: '/article',
       name: 'article',
       component: ArticleDetail,
+    },{
+      path: '/search',
+      name: 'search',
+      component: ArticleSearch,
     }
   ],
 })

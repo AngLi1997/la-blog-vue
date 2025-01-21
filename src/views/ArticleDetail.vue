@@ -31,7 +31,16 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const article = ref({});
+const props = defineProps({
+    content: {
+        typeof: Object
+    }
+});
 onMounted(() => {
+    if (props.content) {
+        article.value = props.content;
+        return;
+    }
     laAxios.get('/api/article/get_by_id', {
         params: {
             id: route.query['id']
@@ -43,14 +52,16 @@ onMounted(() => {
 </script>
 <style scoped>
 .article-title {
-    font-size: 24px;
+    font-size: 30px;
     color: #0055BB;
     margin-bottom: 15px;
+    font-weight: bolder;
 }
 
 .article-sub-title {
     font-size: 20px;
     margin-bottom: 15px;
+    font-weight: lighter;
 }
 
 .article-time {

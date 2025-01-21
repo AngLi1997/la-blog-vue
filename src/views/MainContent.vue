@@ -26,7 +26,7 @@ provide('flushData', flushData)
 <template>
     <div class="container">
         <div class="left">
-            <div class="logo">
+            <div class="logo" @click="() => router.push({path: '/'})">
                 LIANG
             </div>
             <div class="search">

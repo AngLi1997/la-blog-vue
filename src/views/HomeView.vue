@@ -1,17 +1,26 @@
-<script setup>
-import { ref } from 'vue';
-import { MdPreview, MdCatalog } from 'md-editor-v3';
-import 'md-editor-v3/lib/preview.css';
-
-const id = 'preview-only';
-const text = ref('# Hello Editor');
-const scrollElement = document.documentElement; 
-</script>
-
 <template>
-  <MdPreview :id="id" :modelValue="text" />
-  <!-- <MdCatalog :editorId="id" :scrollElement="scrollElement" /> -->
+  <div v-for="item in list">
+    <ArticleDetail :content="item" class="article-detail"/>
+  </div>
 </template>
-
+<script setup>
+import laAxios from '@/components/LaAxios';
+import { onMounted, ref } from 'vue';
+import ArticleDetail from './ArticleDetail.vue';
+const list = ref([]);
+onMounted(() => {
+  laAxios.post('/api/article/page', {
+    page_num: 1,
+    page_size: 10,
+    category_name: "",
+    tag_name: ""
+  }).then(res => {
+    list.value = res.data.data.list;
+  })
+})
+</script>
 <style scoped>
+.article-detail {
+  margin-bottom: 80px;
+}
 </style>
