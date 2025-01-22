@@ -1,7 +1,66 @@
-<script setup lang="ts">
+<template>
+    <div class="container">
+        <div class="left">
+            <div class="logo" @click="() => router.push({ path: '/' })">
+                LIANG
+            </div>
+            <div class="search">
+
+            </div>
+            <ul class="menu">
+                <li>搜索</li>
+                <input type="text" placeholder="搜索" />
+                <li @click="() => router.push({ path: '/about' })">关于我</li>
+                <li>最新</li>
+                <ul class="top_10">
+                    <li v-for="item in top10" @click="() => {
+                        router.push({
+                            path: '/article',
+                            query: {
+                                id: item['ID']
+                            }
+                        })
+                    }">
+                        {{ "[" + item['title'] + "]" }}
+                    </li>
+                </ul>
+            </ul>
+        </div>
+        <div class="middle">
+            <RouterView v-slot="{ Component, route }">
+                <Transition name="fade">
+                    <component :is="Component" :key="route.fullPath" />
+                </Transition>
+            </RouterView>
+        </div>
+        <div class="right">
+            <div class="categories">
+                <div class="title">
+                    分类
+                </div>
+                <ul>
+                    <li v-for="item in categories" @click="flushList(item['name'], undefined)">
+                        {{ item['name'] }}
+                    </li>
+                </ul>
+            </div>
+            <div class="categories">
+                <div class="title">
+                    标签
+                </div>
+                <ul>
+                    <li v-for="item in tags" @click="flushList(undefined, item['name'])">
+                        {{ item['name'] }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<script setup>
 import laAxios from '@/components/LaAxios';
 import { onMounted, provide, ref } from 'vue';
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 const top10 = ref([])
 const tags = ref([])
 const categories = ref([])
@@ -21,63 +80,18 @@ const flushData = () => {
         categories.value = res.data.data;
     })
 }
+
+const flushList = (category, tag) => {
+    router.push({
+        path: '/',
+        query: {
+            category: category,
+            tag: tag
+        }
+    })
+}
 provide('flushData', flushData)
 </script>
-<template>
-    <div class="container">
-        <div class="left">
-            <div class="logo" @click="() => router.push({path: '/'})">
-                LIANG
-            </div>
-            <div class="search">
-
-            </div>
-            <ul class="menu">
-                <li>搜索</li>
-                <input type="text" placeholder="搜索" />
-                <li @click="() => router.push({path: '/about'})">关于我</li>
-                <li>最新</li>
-                <ul class="top_10">
-                    <li v-for="item in top10" @click="() => {
-                        router.push({
-                            path: '/article',
-                            query: {
-                                id: item['ID']
-                            }
-                        })
-                    }">
-                        {{ "[" + item['title'] + "]" }}
-                    </li>
-                </ul>
-            </ul>
-        </div>
-        <div class="middle">
-            <RouterView :key="route.fullPath" />
-        </div>
-        <div class="right">
-            <div class="categories">
-                <div class="title">
-                    分类
-                </div>
-                <ul>
-                    <li v-for="item in categories">
-                        {{ item['name'] }}
-                    </li>
-                </ul>
-            </div>
-            <div class="categories">
-                <div class="title">
-                    标签
-                </div>
-                <ul>
-                    <li v-for="item in tags">
-                        {{ item['name'] }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</template>
 <style scoped>
 .container {
     display: flex;
@@ -94,6 +108,7 @@ provide('flushData', flushData)
     height: 2rem;
     font-size: 2rem;
     font-weight: bolder;
+    cursor: pointer;
 }
 
 .left,
@@ -161,9 +176,16 @@ provide('flushData', flushData)
 
 .categories ul li {
     padding: 0.25rem 0;
+    cursor: pointer;
 }
 
 .top_10 {
     list-style: none;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

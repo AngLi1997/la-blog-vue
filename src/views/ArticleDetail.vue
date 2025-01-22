@@ -20,7 +20,9 @@
                     {{ t }}
                 </span>
             </div>
-            <MdPreview v-model="article['content']" />
+            <div class="preview">
+                <MdPreview v-model="article['content']" />
+            </div>
         </div>
     </div>
 </template>
@@ -52,25 +54,21 @@ onMounted(() => {
 </script>
 <style scoped>
 .article-title {
-    font-size: 30px;
+    font-size: 24px;
     color: #0055BB;
-    margin-bottom: 15px;
-    font-weight: bolder;
+    margin-bottom: 10px;
 }
 
 .article-sub-title {
     font-size: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-weight: lighter;
 }
 
 .article-time {
-    font-size: 14px;
+    font-size: .875em;
     font-weight: bolder;
-    margin-bottom: 15px;
-}
-.article-categories-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .article-categories {
     display: inline-block;
@@ -78,14 +76,13 @@ onMounted(() => {
     color: #0055BB;
     margin-right: 10px;
 }
+.article-categories-group {
+    margin-bottom: 10px;
+}
 .article-tags {
     display: inline-block;
-    font-size: 14px;
-    height: 20px;
-    color: white;
+    font-size: 12px;
+    color: #8440F1;
     margin-right: 10px;
-    background-color: #8440F1;
-    border-radius: 10px;
-    padding: 0px 10px;
 }
 </style>
