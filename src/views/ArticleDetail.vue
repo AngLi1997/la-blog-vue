@@ -21,7 +21,7 @@
                 </span>
             </div>
             <div class="preview">
-                <MdPreview v-model="article['content']" />
+                <MdPreview v-model="article['content']"  auto-fold-threshold="1000"/>
             </div>
         </div>
     </div>

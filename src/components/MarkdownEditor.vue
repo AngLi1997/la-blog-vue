@@ -4,7 +4,7 @@
     <LaTextInput v-model="formData['sub_title']" type="sub-title" :placeholder="'副标题'" />
     <LaTextInput v-model="formData['category_names']" type="sub-title" :placeholder="'分类'" />
     <LaTextInput v-model="formData['tag_names']" type="sub-title" :placeholder="'标签'" />
-    <MdEditor v-model="formData['content']" placeholder="输入正文" class="editor" />
+    <MdEditor v-model="formData['content']" placeholder="输入正文" class="editor" @on-upload-img="uploadImage" :auto-fold-threshold="1000"/>
     <div class="btn-group">
       <LaButton>清空</LaButton>
       <LaButton @click="saveArticle">保存</LaButton>
@@ -47,6 +47,25 @@ const expList = (str) => {
   const list = cleanedStr.split(' ').filter(item => item.trim() !== '');
   console.log(list);
   return list;
+}
+const uploadImage = async (files, callback) => {
+  const res = await Promise.all(
+    files.map((file) => {
+      return new Promise((rev, rej) => {
+        const form = new FormData();
+        form.append('file', file);
+        laAxios
+          .post('/api/file/upload', form, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then((res) => rev(res))
+          .catch((error) => rej(error));
+      });
+    })
+  );
+  callback(res.map((item) => item.data.data))
 }
 
 </script>
