@@ -28,7 +28,7 @@
         </div>
         <div class="middle">
             <RouterView v-slot="{ Component, route }">
-                <Transition name="fade">
+                <Transition mode="out-in">
                     <component :is="Component" :key="route.fullPath" />
                 </Transition>
             </RouterView>
@@ -182,10 +182,15 @@ provide('flushData', flushData)
 .top_10 {
     list-style: none;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
+
+.v-enter-active,
+.v-leave-active {
+    transition: all 0.3s cubic-bezier(1, 0.8, 0.5, 1);
 }
-.fade-enter, .fade-leave-to {
-  opacity: 0;
+
+.v-enter-from,
+.v-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
 }
 </style>
