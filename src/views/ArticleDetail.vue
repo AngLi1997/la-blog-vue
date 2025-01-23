@@ -11,12 +11,12 @@
                 {{ article['created_at'] }}
             </p>
             <div v-if="article['category_names']?.length > 0" class="article-categories-group">
-                <span class="article-categories" v-for="c in article['category_names']">
+                <span class="article-categories" v-for="c in article['category_names']" @click="() => router.push({path: '/',query: {category: c}})">
                     {{ c }}
                 </span>
             </div>
             <div v-if="article['tag_names']?.length > 0" class="article-tags-group">
-                <span class="article-tags" v-for="t in article['tag_names']">
+                <span class="article-tags" v-for="t in article['tag_names']" @click="() => router.push({path: '/',query: {tag: t}})">
                     {{ t }}
                 </span>
             </div>
@@ -30,8 +30,9 @@
 import laAxios from '@/components/LaAxios';
 import { MdEditor, MdPreview } from 'md-editor-v3';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 const article = ref({});
 const props = defineProps({
     content: {
@@ -70,19 +71,26 @@ onMounted(() => {
     font-weight: bolder;
     margin-bottom: 10px;
 }
-.article-categories {
+
+.article-categories, .article-tags {
     display: inline-block;
     font-size: 12px;
-    color: #0055BB;
     margin-right: 10px;
+    cursor: pointer;
 }
+.article-categories:hover, .article-tags:hover {
+    text-decoration: underline;
+}
+
+.article-categories {
+    color: #0055BB;
+}
+
+.article-tags {
+    color: #8440F1;
+}
+
 .article-categories-group {
     margin-bottom: 10px;
-}
-.article-tags {
-    display: inline-block;
-    font-size: 12px;
-    color: #8440F1;
-    margin-right: 10px;
 }
 </style>
